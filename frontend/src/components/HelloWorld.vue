@@ -51,10 +51,17 @@
           nav
         >
           <v-list-item>
-            <v-btn href="/about">
-              About
+            <v-btn href="/websocket-chat">
+              Chat
             </v-btn>
           </v-list-item>
+
+          <v-list-item>
+            <v-btn href="/about">
+                About
+            </v-btn>
+          </v-list-item>
+
           <v-list-item>
             <v-btn @click="openProfileAndHideOthers">
               Profile
@@ -176,9 +183,7 @@
                     <v-btn @click="handleCourseButtonClick(course)" color="black" class="white--text" :id="'button-' + course['title']">
                       Learn More
                     </v-btn>
-                    <!-- <v-btn color="grey" @click="applyButtonClick(course)">
-                      Apply
-                    </v-btn> -->
+
               </v-card-actions>
             </v-card>
           </v-row>

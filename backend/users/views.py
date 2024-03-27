@@ -29,7 +29,7 @@ def get_info_by_token(request, refresh_token_str):
     refresh_token_obj = RefreshToken(refresh_token_str)
     user_id=refresh_token_obj['user_id']
     user=CustomUser.objects.get(id=user_id)
-    content =  {'user_id': user_id, 
+    content = {'user_id': user_id,
                 'username': user.username, 
                 'date_of_birth': user.date_of_birth, 
                 'first_name': user.first_name, 

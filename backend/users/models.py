@@ -62,12 +62,12 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField("date of birth", default=date.today)
     course = models.ManyToManyField(Course, through="Enrollment", blank=True)
+    is_online = models.BooleanField(blank=False, default=False)
     # course = models.ManyToManyField(Course, blank=True)
     # status = models.CharField(max_length=100, choices=STATUS, default='regular')
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
-    
 
     def __str__(self):
         return self.username

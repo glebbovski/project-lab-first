@@ -13,6 +13,11 @@
         <v-text>
             {{ about_project }}
         </v-text>
+        <br/>
+        <b>Your email: </b>
+        <v-text>
+            {{ email }}
+        </v-text>
         <v-footer absolute id="mainFooter">
             <v-container>
                 <!-- <v-row>
@@ -102,6 +107,7 @@ export default {
       born_city: "",
       creator: "",
       about_project: "",
+      email: "",
       backend_url: 'http://127.0.0.1:8000/',
       imageUrl: 'https://cdn.vuetifyjs.com/images/parallax/material.jpg',
       links: [
@@ -154,6 +160,7 @@ export default {
                     this.about_project = res.data['about_project']
                     this.born_city = res.data['born_city']
                     this.creator = res.data['creator']
+                    this.email = this.$session.get('email')
                 }).catch(e => {
                     swal.fire({
                     type: 'warning',

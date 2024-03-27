@@ -26,6 +26,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from users import views
+from chat import views as chatviews
 
 router = DefaultRouter()
 router.register(r"api/users", views.CustomUserViewSet, basename="users")
@@ -34,6 +35,8 @@ router.register(r"api/answers", views.AnswerViewSet, basename="answers")
 router.register(r"api/questions", views.QuestionViewSet, basename="question")
 router.register(r"api/enrollment", views.EnrollmentViewSet, basename="enrollment")
 router.register(r"api/previousresult", views.PreviousResultViewSet, basename="previousresult")
+router.register(r"api/chatmessages", chatviews.MessageViewSet, basename="chatmessages")
+router.register(r"api/online_users", chatviews.OnlineUsersViewSet, basename="onlineusers")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,7 +44,9 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', views.RegisterView.as_view(), name='auth_register'),
     path('api/get_info_by_token/<refresh_token_str>', views.get_info_by_token, name="info_by_token"),
+    # path('api/get_online_users/<refresh_token>', chatviews.get_online_users, name="online_users"),
     path('api/logout/', views.logout_view, name='auth_logout'),
     path('api/about/', views.AboutProjectView.as_view(), name='about_info'),
+    # path('chat/', include('chat.urls')),
     path("", include(router.urls)),
 ]
