@@ -32,8 +32,8 @@
             </div>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="submitQuiz" color="primary" :disabled="isSubmitDisabled">Submit</v-btn>
-            <v-btn @click="retryQuiz" color="primary" :disabled="isRetryDisabled">Retry</v-btn>
+            <v-btn @click="submitQuiz" color="primary" :disabled="isSubmitDisabled" id="submitButton">Submit</v-btn>
+            <v-btn @click="retryQuiz" color="primary" :disabled="isRetryDisabled" id="retryButton">Retry</v-btn>
           </v-card-actions>
         </v-card>
       </v-container>
@@ -44,6 +44,7 @@
               <v-row justify="center" no-gutters class="bg-grey-lighten-1" id="backBtnRow">
                   <v-btn
                   v-for="link in links"
+                  :id="link.id"
                   :key="link.name"
                   color="black"
                   variant="text"
@@ -156,12 +157,12 @@ data: () => ({
               "short_href": "" },
     backend_url: 'http://127.0.0.1:8000/',
     links: [
-      {name: 'Back to Main Page', href: '/'}
+      {name: 'Back to Main Page', href: '/', id: 'backButton'}
     ],
     isRetryDisabled: true,
 }),
 async created() {
-  var success = this.checkLoggedIn();
+  var success = this.checkLoggedIn();``
   if (success) {
       console.log(this.$session.get('course'))
       this.course['id'] = this.$session.get('course')['id'];
@@ -174,7 +175,7 @@ async created() {
       try {
         var access_token = "";
 
-        const res = await axios.post(this.backend_url + '/api/token/refresh/', {
+        const res = await axios.post(this.backend_url + 'api/token/refresh/', {
           "refresh": this.$session.get('refresh')
         });
         access_token = res.data['access'];

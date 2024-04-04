@@ -15,19 +15,19 @@
                               <v-form ref="loginForm" v-model="valid" lazy-validation>
                                   <v-row>
                                       <v-col cols="12">
-                                          <v-text-field v-model="credentials.email" :rules="rules.email" label="Email" required></v-text-field>
+                                          <v-text-field v-model="credentials.email" id="email" :rules="rules.emailRules" label="Email" required></v-text-field>
                                       </v-col>
                                       <v-col cols="12">
-                                          <v-text-field v-model="credentials.password" :rules="rules.password" :append-icon="show1?'eye':'eye-off'" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Password" hint="At least 4 characters" counter @click:append="show1 = !show1"></v-text-field>
+                                          <v-text-field v-model="credentials.password" id="password" :rules="rules.password" :append-icon="show1?'eye':'eye-off'" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Password" hint="At least 4 characters" counter @click:append="show1 = !show1"></v-text-field>
                                       </v-col>
                                       <v-col class="d-flex" cols="12" sm="6" xsm="12">
                                       </v-col>
                                       <v-spacer></v-spacer>
                                       <v-col class="d-flex" cols="12" sm="3" xsm="12">
-                                            <v-btn x-large block color="" @click="sign_up">Sign Up</v-btn>
+                                            <v-btn x-large block id="registerButton" color="" @click="sign_up">Sign Up</v-btn>
                                         </v-col>
                                       <v-col class="d-flex ml-auto" cols="12" sm="3" xsm="12">
-                                          <v-btn x-large block :disabled="!valid" color="success" @click="login"> Login </v-btn>
+                                          <v-btn x-large block id="loginButton" :disabled="!valid" color="success" @click="login"> Login </v-btn>
                                       </v-col>
                                   </v-row>
                               </v-form>
@@ -48,6 +48,7 @@
 <script>
 import swal from 'sweetalert2';
 import router from '../../router';
+import axios from 'axios';
 window.swal = swal;
 export default {
 name: 'Auth',
@@ -64,18 +65,19 @@ data: () => ({
 
   show1: false,
   rules: {
-        username: [
-          v => !!v || "Username is required",
-          v => (v && v.length > 3) || "A username must be more than 3 characters long",
-          v => /^[a-z0-9_]+$/.test(v) || "A username can only contain letters and digits"
-        ],
+        // username: [
+        //   v => !!v || "Username is required",
+        //   v => (v && v.length > 3) || "A username must be more than 3 characters long",
+        //   v => /^[a-z0-9_]+$/.test(v) || "A username can only contain letters and digits"
+        // ],
         password: [
           v => !!v || "Password is required",
           v => (v && v.length > 3) || "The password must be longer than 3 characters"
         ],
-        emailRules: [ 
-        v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-        ]
+        emailRules: [
+          v => !!v || "Required",
+          v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+        ],
       }
 }),
 methods: {

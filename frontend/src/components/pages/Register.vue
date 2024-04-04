@@ -15,25 +15,25 @@
                                 <v-form ref="registerForm" v-model="valid" lazy-validation>
                                     <v-row>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field v-model="firstName" :rules="[rules.required]" label="First Name" maxlength="20" required></v-text-field>
+                                            <v-text-field v-model="firstName" id="firstNameInput" :rules="[rules.required]" label="First Name" maxlength="20" required></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field v-model="lastName" :rules="[rules.required]" label="Last Name" maxlength="20" required></v-text-field>
+                                            <v-text-field v-model="lastName" id="lastNameInput" :rules="[rules.required]" label="Last Name" maxlength="20" required></v-text-field>
                                         </v-col>
                                         <v-col>
-                                            <v-text-field v-model="username" :rules="[rules.required]" label="Username" maxlength="20" required></v-text-field>
+                                            <v-text-field v-model="username" id="usernameInput" :rules="[rules.required]" label="Username" maxlength="20" required></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-text-field v-model="email" :rules="emailRules" label="E-mail" required></v-text-field>
+                                            <v-text-field v-model="email" id="emailInput" :rules="emailRules" label="E-mail" required></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-text-field v-model="password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Password" hint="At least 4 characters" counter @click:append="show1 = !show1"></v-text-field>
+                                            <v-text-field v-model="password" id="passwordInput" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Password" hint="At least 4 characters" counter @click:append="show1 = !show1"></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-text-field block v-model="verify" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, passwordMatch]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Confirm Password" counter @click:append="show1 = !show1"></v-text-field>
+                                            <v-text-field block v-model="verify" id="verifyInput" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, passwordMatch]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Confirm Password" counter @click:append="show1 = !show1"></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
-                                          <v-select
+                                          <v-select id="sexSelect"
                                               label="Sex"
                                               v-model="sex"
                                               :items="['Male', 'Female']"
@@ -49,7 +49,7 @@
                                             min-width="290px"
                                           >
                                             <template v-slot:activator="{ on }">
-                                              <v-text-field
+                                              <v-text-field id="dateMenu"
                                                 label="Date of birth"
                                                 readonly
                                                 :rules="[rules.required]"
@@ -70,10 +70,10 @@
                                         </v-col>
                                         <v-spacer></v-spacer>
                                         <v-col class="d-flex mr-auto" cols="12" sm="3" xsm="12">
-                                            <v-btn x-large block color="" @click="sign_in">Sign In</v-btn>
+                                            <v-btn x-large block color="" @click="sign_in" id="goToLogin">Sign In</v-btn>
                                         </v-col>
                                         <v-col class="d-flex ml-auto" cols="12" sm="3" xsm="12">
-                                            <v-btn x-large block :disabled="!valid" color="success" @click="validate_and_register">Register</v-btn>
+                                            <v-btn x-large block :disabled="!valid" color="success" @click="validate_and_register" id="registerButton">Register</v-btn>
                                         </v-col>
                                     </v-row>
                                 </v-form>

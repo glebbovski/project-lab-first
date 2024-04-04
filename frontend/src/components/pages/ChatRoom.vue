@@ -32,7 +32,7 @@
     
                 <div class="field">
                 <div class="control">
-                    <v-btn class="button is-info white--text" @click="sendMessage" color="black">Submit</v-btn>
+                    <v-btn class="button is-info white--text" @click="sendMessage" color="black" id="submitButton">Submit</v-btn>
                 </div>
                 </div>
     
@@ -56,6 +56,7 @@
                 <br />
                 <v-row justify="center" no-gutters class="bg-grey-lighten-1" id="backBtnRow">
                     <v-btn
+                    id="backButton"
                     color="black"
                     variant="text"
                     class="mx-2 white--text"
@@ -124,6 +125,9 @@ import axios from 'axios';
                         
                     }
                     })
+                    this.messages.sort(function(a, b) {
+                        return new Date(a.date_added) - new Date(b.date_added);
+                    });
                     // this.messages.push({ username: data.username, content: data.message });
 
                     this.scrollToBottom();
@@ -181,7 +185,7 @@ import axios from 'axios';
       checkLoggedIn() {
         this.$session.start();
         if (!this.$session.has("refresh") || this.$session.get("refresh") === null) {
-            router.push("/login");
+            router.push("/login").catch(()=>{});
             return false;
         }
         return true;

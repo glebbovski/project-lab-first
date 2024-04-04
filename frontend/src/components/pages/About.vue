@@ -35,6 +35,7 @@
                     <v-btn
                     v-for="link in links"
                     :key="link.name"
+                    :id="link.id"
                     color="black"
                     variant="text"
                     class="mx-2 white--text"
@@ -111,7 +112,7 @@ export default {
       backend_url: 'http://127.0.0.1:8000/',
       imageUrl: 'https://cdn.vuetifyjs.com/images/parallax/material.jpg',
       links: [
-        {name: 'Back to Main Page', href: '/'}
+        {name: 'Back to Main Page', href: '/', id: 'backButton'}
         // 'About Us',
         // 'Team',
         // 'Services',

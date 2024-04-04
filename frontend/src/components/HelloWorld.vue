@@ -1,34 +1,3 @@
-
-
-<!-- <template>
-    <v-layout>
-      <v-navigation-drawer
-        permanent
-        id="navdraw"
-        color="blue-grey darken-4"
-      >
-        <v-list color="transparent">
-          <v-list-item prepend-icon="mdi-view-dashboard" title="Dashboard">
-            <v-btn>
-              About
-            </v-btn>
-          </v-list-item>
-          <v-list-item prepend-icon="mdi-account-box" title="Account"></v-list-item>
-          <v-list-item prepend-icon="mdi-gavel" title="Admin"></v-list-item>
-        </v-list>
-
-        <template v-slot:append>
-          <div class="pa-2">
-            <v-btn block>
-              Logout
-            </v-btn>
-          </div>
-        </template>
-      </v-navigation-drawer>
-    </v-layout>
-</template> -->
-
-
 <template>
     <v-layout>
       <v-navigation-drawer
@@ -51,25 +20,25 @@
           nav
         >
           <v-list-item>
-            <v-btn href="/websocket-chat">
+            <v-btn href="/websocket-chat" id="chatButton">
               Chat
             </v-btn>
           </v-list-item>
 
           <v-list-item>
-            <v-btn href="/about">
-                About
+            <v-btn href="/about" id="aboutButton">
+              About
             </v-btn>
           </v-list-item>
 
           <v-list-item>
-            <v-btn @click="openProfileAndHideOthers">
+            <v-btn @click="openProfileAndHideOthers" id="profileButton">
               Profile
             </v-btn>
           </v-list-item>
 
           <v-list-item>
-            <v-btn @click="openDashboardAndHideOthers">
+            <v-btn @click="openDashboardAndHideOthers" id="coursesButton">
               All Courses
             </v-btn>
           </v-list-item>
@@ -77,52 +46,28 @@
         </v-list>
         <template v-slot:append>
           <div class="pa-2">
-            <v-btn block @click="logout">
+            <v-btn block @click="logout" id="logoutButton">
               Logout
             </v-btn>
           </div>
         </template>
       </v-navigation-drawer>
 
-      <!-- <v-card class="mx-auto" width="auto" style="height: 400px" tile>
-          <v-img style="height: 400px" src="https://cdn.vuetifyjs.com/images/cards/server-room.jpg"></v-img>
-          <v-col>
-            <v-avatar size="100" style="position:absolute; top: 130px">
-              <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
-            </v-avatar>
-          </v-col>
-            <v-list-item color="rgba(0, 0, 0, .4)">
-              <v-list-item-content>
-                <v-list-item-title class="title">Marcus Obrien</v-list-item-title>
-                <v-list-item-subtitle>Network Engineer</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-      </v-card> -->
-      
-
       <v-container fluid>
       <v-row>
         <v-layout column v-show="isProfileContainerVisible">
             <v-card>
                 <v-card-text >
-                    <!-- <v-flex class="mb-4">
-                        <v-btn>Change Avatar</v-btn>
-                    </v-flex> -->
                     <v-text-field
-                        label="First Name" v-model="first_name"></v-text-field>
+                        label="First Name" id="firstName" v-model="first_name"></v-text-field>
                     <v-text-field
-                        label="Last Name" v-model="last_name"></v-text-field>
+                        label="Last Name" id="lastName" v-model="last_name"></v-text-field>
                     <v-text-field
-                        label="Email Address" v-model="email" :readonly=true></v-text-field>
-                    <!-- <v-select
-                          label="Sex"
-                          :items="['Male', 'Female']"
-                          :value="sex === 'M' ? 'Male' : 'Female'"
-                          @change="updateChangedSex"
-                    ></v-select> -->
+                        label="Email Address" id="emailAddress" v-model="email" :readonly=true></v-text-field>
                     <v-select
                       item-text="name"
                       label="Sex"
+                      id="sexSelection"
                       v-model="defaultSelectedSex['name']"
                       :items="sex_arr"
                       >
@@ -138,13 +83,14 @@
                       >
                         <template v-slot:activator="{ on }">
                           <v-text-field
+                            id="datePicker"
                             label="Date of birth"
                             readonly
                             :value="fromDateDisp"
                             v-on="on"
                           ></v-text-field>
                         </template>
-                        <v-date-picker
+                        <v-date-picker 
                           locale="en-in"
                           :min="minDate"
                           :max="maxDate"
@@ -155,7 +101,7 @@
                     </v-menu>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn color="primary" @click="saveChangedProfileAttributes">
+                    <v-btn id="saveChangesButton" color="primary" @click="saveChangedProfileAttributes">
                         Save Changes
                     </v-btn>
                 </v-card-actions>
@@ -165,6 +111,7 @@
           <v-row no-gutters>
             <v-card
               v-for="course in allCourses"
+              :id="'course-' + course['id']"
               :key="course['id']"
               cols="12"
               sm="4"
@@ -292,7 +239,7 @@ export default {
                 }, config)
                 .then(res => {
                   console.log(res.data);
-                  router.push('/login');
+                  router.push('/login').catch(()=>{});
 
                   this.$session.set('access', null);
                   this.$session.set('refresh', null);
@@ -313,7 +260,7 @@ export default {
                     if (e.response.data['code'] === 'user_not_found') {
                       this.$session.set('access', null);
                       this.$session.set('refresh', null);
-                      router.push('/login');
+                      router.push('/login').catch(()=>{});
 
                       swal.fire({
                           type: 'warning',
@@ -479,7 +426,7 @@ export default {
               try {
                 var access_token = "";
 
-                const res = await axios.post(this.backend_url + '/api/token/refresh/', {
+                const res = await axios.post(this.backend_url + 'api/token/refresh/', {
                   "refresh": this.$session.get('refresh')
                 });
                 access_token = res.data['access'];
