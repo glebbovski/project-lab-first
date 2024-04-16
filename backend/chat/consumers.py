@@ -1,11 +1,12 @@
-import json
-
-from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
 
 from .models import Message
+from channels.generic.websocket import AsyncWebsocketConsumer
 from users.models import CustomUser
+from channels.generic.websocket import AsyncWebsocketConsumer
+import json
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -33,7 +34,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = self.scope['user']
         await self.update_user_status(user, False)
 
-    # Receive message from web socket
+    async def send_notification(self, event):
+        await self.send(text_data=json.dumps(event))
+
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data['message']
@@ -76,3 +79,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def update_user_status(self, user, status):
         return CustomUser.objects.filter(pk=user.pk).update(is_online=status)
+
+
+class GetJokeConsumer(AsyncWebsocketConsumer):
+     async def connect(self):
+       self.room_group_name = 'joke'
+       await self.channel_layer.group_add(
+       self.room_group_name,
+       self.channel_name
+       )
+       await self.accept()
+
+     async def disconnect(self, code):
+       await self.channel_layer.group_discard(
+       self.room_group_name,
+       self.channel_name
+       )
+
+     async def send_joke(self, event):
+        await self.send(text_data=json.dumps(event))

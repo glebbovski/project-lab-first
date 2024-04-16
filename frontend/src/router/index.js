@@ -6,8 +6,8 @@ import Courses from "../components/pages/Courses.vue"
 import Register from "../components/pages/Register.vue"
 import About from "../components/pages/About.vue"
 import Course from "../components/pages/Course.vue"
-import ChatPreview from "../components/pages/ChatPreview.vue";
 import ChatRoom from "../components/pages/ChatRoom.vue";
+import Check from "../components/pages/Check.vue";
 
 Vue.use(VueRouter);
 
@@ -58,14 +58,14 @@ const routes = [
     component: Course
   },
   {
-    path: "/chat-preview",
-    name: "chatpreview",
-    component: ChatPreview
-  },
-  {
     path: "/websocket-chat",
     name: "chatroom",
     component: ChatRoom
+  },
+  {
+    path: "/check",
+    name: "check",
+    component: Check
   }
 ];
 

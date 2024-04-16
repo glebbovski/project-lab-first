@@ -2,9 +2,7 @@ import json
 from rest_framework import viewsets, authentication
 from rest_framework.request import Request
 from django.shortcuts import get_object_or_404, render
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
-from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
@@ -12,15 +10,11 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import MyTokenObtainPairSerializer, RegisterSerializer
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from rest_framework.permissions import IsAuthenticated
 from .models import CustomUser, Course, Question, Answer, Enrollment, PreviousResult
 from .serializers import CustomUserSerializer, CourseSerializer, QuestionSerializer, AnswerSerializer, EnrollmentSerializer, PreviousResultSerializer
 
@@ -36,7 +30,8 @@ def get_info_by_token(request, refresh_token_str):
                 'last_name': user.last_name,
                 'sex': user.sex,
                 'email': user.email,
-                'is_active': user.is_active }
+                'is_active': user.is_active,
+               'is_superuser': user.is_superuser}
     return HttpResponse(json.dumps(content, indent=4, sort_keys=True, default=str), 
                         content_type="application/json", 
                         status=status.HTTP_200_OK)

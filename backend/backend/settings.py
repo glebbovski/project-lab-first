@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 import datetime
 from pathlib import Path
+from kombu.entity import Exchange, Queue
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-#0_)1h7nul2-js^hb3evi-y+5xrw541@hv=uovd$4hv6(my6ff
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -48,6 +49,9 @@ INSTALLED_APPS = [
     'channels',
     'chat',
     'channels_auth_token_middlewares',
+    'tasks',
+    'django_celery_beat',
+    'django_celery_results',
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -140,7 +144,9 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -216,3 +222,13 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'djangochekmezov@gmail.com'
+EMAIL_HOST_PASSWORD = 'xrtritgvfrerinub'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'djangochekmezov@gmail.com'
+
+CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672//"

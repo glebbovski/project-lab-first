@@ -1,0 +1,5 @@
+Hello {{name|safe}}
+Thank you for your participation in course '{{course|safe}}'
+For now you can not get a certificate, but we hope you change it in future.
+
+Have a good day!

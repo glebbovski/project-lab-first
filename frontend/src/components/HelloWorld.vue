@@ -43,6 +43,12 @@
             </v-btn>
           </v-list-item>
 
+          <v-list-item>
+            <v-btn v-if="isSuperuser" href="/check" id="checkButton">
+              Celery Tasks
+            </v-btn>
+          </v-list-item>
+
         </v-list>
         <template v-slot:append>
           <div class="pa-2">
@@ -176,7 +182,8 @@ import axios from 'axios';
 export default {
   name: 'HelloWorld',
   data: () => ({
-    backend_url: 'http://127.0.0.1:8000/',
+    // backend_url: 'http://127.0.0.1:8000/',
+    backend_url: 'http://192.168.1.105:8000/',
     username: "",
     email: "",
     user_id: -1,
@@ -188,6 +195,7 @@ export default {
     loading: false,
     isProfileContainerVisible: false,
     isDashboardContainerVisible: false,
+    isSuperuser: null,
 
     fromDateMenu: false,
     fromDateVal: null,
@@ -296,11 +304,6 @@ export default {
               } 
               return true;
             },
-            // updateChangedSex() {
-            //   this.changedSex = this.changedSex === 'M' ? 'F' : 'M';
-            //   console.log(this.changedSex);
-              
-            // },
             async getAllCourses() {
               
               this.loading = true;
@@ -486,6 +489,7 @@ export default {
       this.first_name = this.$session.get('first_name')
       this.last_name = this.$session.get('last_name')
       this.date_of_birth = this.$session.get('date_of_birth')
+      this.isSuperuser = this.$session.get('is_superuser')
       this.fromDateVal = this.date_of_birth
 
       if (this.sex === 'M') {

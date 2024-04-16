@@ -53,7 +53,8 @@ window.swal = swal;
 export default {
 name: 'Auth',
 data: () => ({
-  backend_url: 'http://127.0.0.1:8000/',
+  // backend_url: 'http://127.0.0.1:8000/',
+  backend_url: 'http://192.168.1.105:8000/',
   credentials: {},
   dialog: true,
   tab: 0,
@@ -101,6 +102,7 @@ methods: {
                 this.$session.set('first_name', res.data['first_name']);
                 this.$session.set('last_name', res.data['last_name']);
                 this.$session.set('date_of_birth', res.data['date_of_birth']);
+                this.$session.set('is_superuser', res.data['is_superuser']);
 
                 router.push('/');
                 swal.fire({

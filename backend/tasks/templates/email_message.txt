@@ -1,0 +1,4 @@
+Hello {{name|safe}}
+You have got a new certificate for course '{{course|safe}}'
+
+Thank you!

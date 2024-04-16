@@ -15,7 +15,11 @@
       </v-text> -->
       <v-container>
         <v-card>
-          <v-card-title>Quiz</v-card-title>
+          <v-card-title>
+            Quiz
+            <v-icon v-if="isAllProperlyAnswered === true" color="green" style="margin-left: 5px;">mdi-check-circle</v-icon>
+            <v-icon v-if="isAllProperlyAnswered === false" color="red" style="margin-left: 5px;">mdi-close-circle</v-icon>
+          </v-card-title>
           <v-card-text>
             <div v-for="(question, index) in questions" :key="index">
               <div>{{ question.text }}</div>
@@ -37,8 +41,11 @@
           </v-card-actions>
         </v-card>
       </v-container>
-
-      <!-- <v-footer absolute id="mainFooter"> -->
+      <v-card>
+        <p v-if="keyReceived" class="font-weight-regular">
+              {{ key }}
+        </p>
+      </v-card>
           <v-container>
               <br />
               <v-row justify="center" no-gutters class="bg-grey-lighten-1" id="backBtnRow">
@@ -116,50 +123,23 @@ name: "About",
 
 data: () => ({
 
-    // questions: [ 
-    //     {
-    //       text: 'What is the capital of France?',
-    //       options: [
-    //         { text: 'London', isCorrect: false },
-    //         { text: 'Paris', isCorrect: true },
-    //         { text: 'Berlin', isCorrect: false }
-    //       ],
-    //       selectedOption: null,
-    //       submitted: false
-    //     },
-    //     {
-    //       text: 'Which planet is known as the Red Planet?',
-    //       options: [
-    //         { text: 'Venus', isCorrect: false },
-    //         { text: 'Mars', isCorrect: true },
-    //         { text: 'Jupiter', isCorrect: false }
-    //       ],
-    //       selectedOption: null,
-    //       submitted: false
-    //     },
-    //     {
-    //       text: 'What is the right answer for 2+2?',
-    //       options: [
-    //         { text: '5', isCorrect: false },
-    //         { text: '4', isCorrect: true },
-    //         { text: '1', isCorrect: false }
-    //       ],
-    //       selectedOption: null,
-    //       submitted: false
-    //     }
-    //     // Add more questions as needed
-    //   ],
-
     questions: [],
     course: { "id": -1,
               "title": "",
               "description": "",
               "short_href": "" },
-    backend_url: 'http://127.0.0.1:8000/',
+    email: '',
+    // backend_url: 'http://127.0.0.1:8000/',
+    backend_url: 'http://192.168.1.105:8000/',
+    ws_url: 'ws://192.168.1.105:8000/',
     links: [
       {name: 'Back to Main Page', href: '/', id: 'backButton'}
     ],
     isRetryDisabled: true,
+    isAllProperlyAnswered: null,
+    chatSocket: null,
+    keyReceived: false,
+    key: null,
 }),
 async created() {
   var success = this.checkLoggedIn();``
@@ -171,6 +151,8 @@ async created() {
       this.course['short_href'] = this.$session.get('course')['short_href'];
       this.course['url_for_image'] = this.$session.get('course')['url_for_image'];
       this.course['long_description'] = this.$session.get('course')['long_description'];
+
+      this.email = this.$session.get('email');
 
       try {
         var access_token = "";
@@ -247,6 +229,18 @@ async created() {
           }
           console.log(this.questions)
         }
+
+        let counter = 0;
+        this.questions.forEach(question => {
+            if (question.options[question.selectedOption].isCorrect) {
+              counter++;
+            }
+        });
+        if (this.questions.length == counter) {
+          this.isAllProperlyAnswered = true;
+        } else {
+          this.isAllProperlyAnswered = false;
+        }
         // console.log(previousResults.data.length)
 
       } catch (e) {
@@ -275,7 +269,6 @@ methods: {
     return true;
   },
   async submitQuiz() {
-      // console.log("User: " + this.$session.get('user_id') + ", Course: " + this.$session.get('course')['id'])
       const config = {
         headers: { 'Authorization': 'Bearer ' + this.$session.get('access'),
                   'Content-Type': 'application/json' 
@@ -283,8 +276,6 @@ methods: {
       };
       this.questions.forEach(question => {
         question.submitted = true;
-        // console.log(", Question: " + question['id'] + ", Answer: " + question.options[question.selectedOption]['id'])
-        // console.log(question.options[question.selectedOption]);
         console.log(question.selectedOption)
         var json = {
           "user": this.$session.get('user_id'),
@@ -298,6 +289,44 @@ methods: {
         })
       });
       this.isRetryDisabled = false;
+
+      
+      let counter = 0;
+      this.questions.forEach(question => {
+          if (question.options[question.selectedOption].isCorrect) {
+            counter++;
+          }
+      });
+
+      const json_to_send = {
+          name: this.$session.get('first_name') + ' ' + this.$session.get('last_name'),
+          course: this.$session.get('course')['title'],
+          email: this.$session.get('email')
+      }
+
+      if (this.questions.length == counter) {
+        this.isAllProperlyAnswered = true;
+        axios.post(this.backend_url + "api/generatepdf/", json_to_send, config)
+
+      } else {
+        this.isAllProperlyAnswered = false;
+        axios.post(this.backend_url + "api/coursenotfinished/", json_to_send, config)
+      }
+
+      this.chatSocket = new WebSocket(this.ws_url +'ws/joke/');
+      this.chatSocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log("Received notification:", event.data);
+        if (data['name_of_operation'].includes('Key Generation Task')) {
+          if (this.email == data['email']) {
+            console.log(this.email);
+            this.keyReceived = true;
+            this.key = data['text'];
+          }
+        }
+      };
+
+
   },
   async retryQuiz() {
     const config = {
@@ -323,6 +352,11 @@ methods: {
     })
     this.$session.set('previousResults', null)
     this.isRetryDisabled = true;
+    this.isAllProperlyAnswered = null;
+
+    this.chatSocket.close();
+    this.keyReceived = false;
+    this.key = null;
   }
 }
 };

@@ -20,16 +20,6 @@
         </v-text>
         <v-footer absolute id="mainFooter">
             <v-container>
-                <!-- <v-row>
-                    <v-carousel hide-delimiters style="width:75%" class="center">
-                        <v-carousel-item
-                        v-for="(item,i) in item_srcs"
-                        :key="i"
-                        :src="item.src"
-                        cover
-                        ></v-carousel-item>
-                    </v-carousel>
-                </v-row> -->
                 <br />
                 <v-row justify="center" no-gutters class="bg-grey-lighten-1" id="backBtnRow">
                     <v-btn
@@ -109,7 +99,8 @@ export default {
       creator: "",
       about_project: "",
       email: "",
-      backend_url: 'http://127.0.0.1:8000/',
+      // backend_url: 'http://127.0.0.1:8000/',
+      backend_url: 'http://192.168.1.105:8000/',
       imageUrl: 'https://cdn.vuetifyjs.com/images/parallax/material.jpg',
       links: [
         {name: 'Back to Main Page', href: '/', id: 'backButton'}

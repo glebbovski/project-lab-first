@@ -13,16 +13,6 @@ from .serializers import MessageSerializer, OnlineUsersSerializer
 from django.http import HttpResponse
 
 
-# def index(request):
-#     return render(request, 'chat/index.html')
-#
-#
-# def room(request, room_name):
-#     username = request.GET.get('username', 'Anonymous')
-#     messages = Message.objects.filter(room=room_name)[0:25]
-#
-#     return render(request, 'chat/room.html', {'room_name': room_name, 'username': username, 'messages': messages})
-
 def get_online_users(request, refresh_token):
     refresh_token_obj = RefreshToken(refresh_token)
     user_id = refresh_token_obj['user_id']

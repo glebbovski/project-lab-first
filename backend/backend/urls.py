@@ -27,6 +27,7 @@ from rest_framework_simplejwt.views import (
 
 from users import views
 from chat import views as chatviews
+from tasks import views as tasksviews
 
 router = DefaultRouter()
 router.register(r"api/users", views.CustomUserViewSet, basename="users")
@@ -37,6 +38,7 @@ router.register(r"api/enrollment", views.EnrollmentViewSet, basename="enrollment
 router.register(r"api/previousresult", views.PreviousResultViewSet, basename="previousresult")
 router.register(r"api/chatmessages", chatviews.MessageViewSet, basename="chatmessages")
 router.register(r"api/online_users", chatviews.OnlineUsersViewSet, basename="onlineusers")
+router.register(r'api/coursekeys', tasksviews.OperationResultViewSet, basename='check_course_key'),
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -47,6 +49,8 @@ urlpatterns = [
     # path('api/get_online_users/<refresh_token>', chatviews.get_online_users, name="online_users"),
     path('api/logout/', views.logout_view, name='auth_logout'),
     path('api/about/', views.AboutProjectView.as_view(), name='about_info'),
+    path('api/generatepdf/', tasksviews.CourseCompletedView.as_view(), name='generate_pdf'),
+    path('api/coursenotfinished/', tasksviews.CourseNotCompletedView.as_view(), name='course_not_completed'),
     # path('chat/', include('chat.urls')),
     path("", include(router.urls)),
 ]
